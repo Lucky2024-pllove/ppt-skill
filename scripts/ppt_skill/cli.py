@@ -50,6 +50,30 @@ THEMES = {
         "fonts": {"title": "Calibri", "body": "Calibri", "title_ea": "微软雅黑", "body_ea": "微软雅黑"},
         "slide_size": {"width": 13.333, "height": 7.5},
     },
+    "neutral": {
+        "label": "Neutral Minimal Light",
+        "style": "neutral_minimal",
+        "colors": {
+            "primary": "#2F3133", "secondary": "#F1F0ED",
+            "accent": "#A85F2A", "background": "#FAFAF8",
+            "text": "#2A2A2A", "text_light": "#66615C",
+            "cover_background": "#2F3133", "cover_subtitle": "#D8D2C8",
+        },
+        "fonts": {"title": "Aptos Display", "body": "Aptos", "title_ea": "微软雅黑", "body_ea": "微软雅黑"},
+        "slide_size": {"width": 13.333, "height": 7.5},
+    },
+    "neutral_dark": {
+        "label": "Neutral Minimal Dark",
+        "style": "neutral_minimal",
+        "colors": {
+            "primary": "#C7A15D", "secondary": "#242424",
+            "accent": "#E0B15C", "background": "#121212",
+            "text": "#EFEDE8", "text_light": "#B8B2A8",
+            "cover_background": "#1B1B1B", "cover_subtitle": "#B8B2A8",
+        },
+        "fonts": {"title": "Aptos Display", "body": "Aptos", "title_ea": "微软雅黑", "body_ea": "微软雅黑"},
+        "slide_size": {"width": 13.333, "height": 7.5},
+    },
     "blue": {
         "label": "科技蓝",
         "colors": {
@@ -176,6 +200,7 @@ class SlideBuilder:
         self.colors = theme.get("colors", {})
         self.fonts = theme.get("fonts", {})
         self.images = images or {}
+        self.style = theme.get("style", "")
         self._add_white_background()
 
     def _add_white_background(self):
@@ -320,6 +345,10 @@ class SlideBuilder:
             self._apply_font(p2.runs[0], "body")
         return card
 
+    def add_neutral_marker(self, left, top, size=0.12):
+        return self.add_rect(left, top, Inches(size), Inches(size),
+                             fill_color=self.colors.get("accent", "#A85F2A"))
+
     def add_image(self, slot_id: str, left, top, width=None, height=None):
         """如果 images 中有该 slot_id 对应的图片路径，则嵌入图片。"""
         img_path = self.images.get(slot_id)
@@ -374,7 +403,7 @@ class PptBuilder:
     def _build_cover(self, data):
         sb = self._new_sb()
         sb.add_rect(Inches(0), Inches(0), Inches(SLIDE_W), Inches(SLIDE_H),
-                    fill_color=self.theme["colors"]["primary"])
+                    fill_color=self.theme["colors"].get("cover_background", self.theme["colors"]["primary"]))
         sb.add_image("cover_bg", Inches(0), Inches(0), Inches(SLIDE_W), Inches(SLIDE_H))
         sb.add_image("cover_logo", Inches(11.0), Inches(0.3), Inches(1.5), Inches(0.6))
         title = data.get("title", "")
@@ -387,7 +416,7 @@ class PptBuilder:
         if subtitle:
             sb.add_body_text(subtitle, left=Inches(1.5), top=Inches(3.8),
                              width=Inches(10.3), height=Inches(0.6),
-                             font_size=18, color="#CADCFC",
+                             font_size=18, color=self.theme["colors"].get("cover_subtitle", self.theme["colors"]["secondary"]),
                              alignment=PP_ALIGN.CENTER)
 
     def _build_problem(self, data):
@@ -490,12 +519,17 @@ class PptBuilder:
                 y = Inches(y_in)
 
                 # 左侧色条
-                sb.add_rect(x, y, Inches(bar_w_in), Inches(text_h_in),
-                            fill_color=self.theme["colors"]["primary"])
+                if self.theme.get("style") == "neutral_minimal":
+                    sb.add_neutral_marker(x, y + Inches(0.08))
+                    marker_offset_in = 0.18
+                else:
+                    sb.add_rect(x, y, Inches(bar_w_in), Inches(text_h_in),
+                                fill_color=self.theme["colors"]["primary"])
+                    marker_offset_in = bar_w_in
 
                 # 标题（左列）
                 name_w_in = max(0.8, col_w_in * name_ratio)
-                name_left_in = x_in + bar_w_in + inner_gap_in
+                name_left_in = x_in + marker_offset_in + inner_gap_in
                 sb.add_body_text(
                     name,
                     left=Inches(name_left_in),
@@ -757,9 +791,14 @@ class PptBuilder:
                     item_title = str(item)
                     item_desc = ""
                 y = Inches(1.6) + Inches(1.1) * i
-                sb.add_rect(Inches(MARGIN_L), y, Inches(0.08), Inches(0.6),
-                            fill_color=self.theme["colors"]["primary"])
-                sb.add_body_text(item_title, left=Inches(MARGIN_L + 0.3), top=y,
+                if self.theme.get("style") == "neutral_minimal":
+                    sb.add_neutral_marker(Inches(MARGIN_L), y + Inches(0.08))
+                    title_left = MARGIN_L + 0.25
+                else:
+                    sb.add_rect(Inches(MARGIN_L), y, Inches(0.08), Inches(0.6),
+                                fill_color=self.theme["colors"]["primary"])
+                    title_left = MARGIN_L + 0.3
+                sb.add_body_text(item_title, left=Inches(title_left), top=y,
                                  width=Inches(2.5), height=Inches(0.6),
                                  font_size=16, bold=True,
                                  color=self.theme["colors"]["primary"])

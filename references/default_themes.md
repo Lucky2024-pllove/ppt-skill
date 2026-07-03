@@ -29,6 +29,34 @@ Chinese:    Microsoft YaHei
 Best for:   general business reports, internal briefings, neutral proposals
 ```
 
+### neutral - Neutral Minimal Light
+
+```text
+Primary:    #2F3133
+Secondary:  #F1F0ED
+Accent:     #A85F2A
+Background: #FAFAF8
+Title font: Aptos Display
+Body font:  Aptos
+Chinese:    Microsoft YaHei
+Best for:   non-blue-purple decks, neutral minimal business reports, restrained proposals
+Rules:      avoid blue/purple primary colors, large gradients, and left vertical accent bars
+```
+
+### neutral_dark - Neutral Minimal Dark
+
+```text
+Primary:    #C7A15D
+Secondary:  #242424
+Accent:     #E0B15C
+Background: #121212
+Title font: Aptos Display
+Body font:  Aptos
+Chinese:    Microsoft YaHei
+Best for:   dark neutral minimal variants, executive briefings, premium restrained decks
+Rules:      avoid blue/purple primary colors, large gradients, and left vertical accent bars
+```
+
 ### blue - Technology Blue
 
 ```text
@@ -121,7 +149,9 @@ Best for:   healthcare, education, service design, modern but restrained topics
     "accent": "#F96167",
     "background": "#FFFFFF",
     "text": "#333333",
-    "text_light": "#666666"
+    "text_light": "#666666",
+    "cover_background": "#1E2761",
+    "cover_subtitle": "#CADCFC"
   },
   "fonts": {
     "title": "Calibri",

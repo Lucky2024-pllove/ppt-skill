@@ -66,6 +66,8 @@ When the user does not provide a template, built-in themes can be used.
 | Theme | Best for |
 |---|---|
 | `default` | General business reports and internal briefings |
+| `neutral` | Non-blue-purple, neutral minimal, low-saturation, restrained business decks |
+| `neutral_dark` | Dark neutral minimal, non-blue-purple, premium restrained decks |
 | `blue` | Technology, AI, data, and platform topics |
 | `green` | Health, sustainability, agriculture, and public welfare |
 | `orange` | Sales proposals, marketing campaigns, and growth plans |

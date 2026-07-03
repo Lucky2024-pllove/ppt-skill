@@ -11,7 +11,8 @@ description: |
   (A) Template mode: if the user provides a .pptx template, fill content into the
       template while preserving master slides, backgrounds, themes, and layouts.
   (B) Theme mode: if no template is provided, build slides from scratch with a built-in
-      theme: default, blue, green, orange, purple, red, or teal.
+      theme: default, neutral, neutral_dark, blue, green, orange, purple, red,
+      or teal.
 
   The calling Agent is responsible for understanding the user's intent, deciding or
   confirming the outline, expanding slide content, optionally collecting image files,
@@ -138,12 +139,45 @@ Rules:
 Available themes:
 
 - `default`: default business blue
+- `neutral`: neutral minimal light theme
+- `neutral_dark`: neutral minimal dark theme
 - `blue`: technology blue
 - `green`: forest green
 - `orange`: warm business orange
 - `purple`: elegant purple
 - `red`: China red
 - `teal`: teal
+
+### Optional Visual Style: Neutral Minimal
+
+Use `neutral` or `neutral_dark` only when the user explicitly or implicitly asks for
+one of these styles:
+
+- non-blue-purple, no blue/purple, avoid blue/purple, or similar constraints
+- 中性极简风格, 非蓝紫风格, 克制商务风, 去科技蓝风格
+- low-saturation, grayscale, graphite, black-white-gray, premium minimal, or whitespace-heavy style
+- light/dark PPT theme variants
+
+Rules for Neutral Minimal:
+
+- Do not use blue, purple, or adjacent hues as primary colors or large background areas.
+- Avoid large gradient backgrounds.
+- Avoid left vertical accent bars as the default emphasis pattern. Use small markers,
+  short rules, restrained labels, or typography instead.
+- Use neutral and low-saturation colors as the base palette.
+- Use a small amount of restrained accent color for key numbers, icons, labels, and
+  conclusions.
+- Emphasize whitespace, clear hierarchy, and one main idea per slide.
+- Use visually sharp small-radius cards, chart containers, and image masks; target an
+  equivalent 2px radius when the renderer supports radius control.
+- Treat light and dark as separate PPT theme variants, not runtime theme switching.
+
+Theme selection rule:
+
+- If the user asks for Neutral Minimal / 非蓝紫 / 中性极简 style, choose `neutral` by
+  default, or `neutral_dark` when the user asks for a dark style.
+- In this case, do not choose `default`, `blue`, `purple`, or `teal` unless the user
+  explicitly overrides the style constraint.
 
 Example:
 
